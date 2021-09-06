@@ -19,4 +19,27 @@ def grading_function(body: dict) -> dict:
     to output the grading response.
     """
 
-    return {"is_correct": True, "received_body": body}
+    type_dict = {"float": float, "int": int, "str": str, "dict": dict}
+    req_type = body["params"]["type"]
+
+    # Try cast each of the inputs to their requested type:
+    errors = []
+    try:
+        res = type_dict[req_type](body["response"])
+    except ValueError as e:
+        errors += [
+            {"description": f"Could not cast `response` parameter to {req_type}"}
+        ]
+
+    try:
+        ans = type_dict[req_type](body["answer"])
+    except ValueError as e:
+        errors += [{"description": f"Could not cast `answer` parameter to {req_type}"}]
+
+    if errors:
+        return {"error": errors}
+
+    # Are they equaL?
+    is_exact_equal = res == ans
+
+    return {"is_correct": is_exact_equal}

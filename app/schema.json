@@ -1,10 +1,18 @@
 {
-    "$schema": "http://json-schema.org/draft/2019-09/schema#",
-    "title": "Generic schema for the data passed to a grading cloud function.",
-    "type": "object",
-    "properties": {
-        "example": {"const": "property"}
-    },
-    "required": ["example"],
-    "additionalProperties": false
+  "$schema": "http://json-schema.org/draft/2019-09/schema#",
+  "title": "Generic schema for the data passed to a grading cloud function.",
+  "type": "object",
+  "properties": {
+    "answer": {},
+    "response": {},
+    "params": {
+      "type": "object",
+      "properties": {
+        "type": { "enum": ["int", "float", "str", "dict"] }
+      },
+      "required": ["type"]
+    }
+  },
+  "required": ["answer", "response", "params"],
+  "additionalProperties": true
 }

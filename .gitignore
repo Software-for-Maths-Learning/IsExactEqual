@@ -7,3 +7,6 @@
 
 # Remove python caching
 __pycache__
+
+# Custom local build and test scripts
+test.bat
