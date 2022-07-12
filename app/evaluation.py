@@ -1,8 +1,8 @@
-def grading_function(body: dict) -> dict:
+def evaluation_function(response, answer, params) -> dict:
     """
     Function used to grade a student response.
     ---
-    The handler function passes only one argument to grading_function(),
+    The handler function passes only one argument to evaluation_function(),
     which is a dictionary of the structure of the API request body
     deserialised from JSON.
 
@@ -15,31 +15,32 @@ def grading_function(body: dict) -> dict:
 
     The way you wish to structure you code (all in this function, or
     split into many) is entirely up to you. All that matters are the
-    return types and that grading_function() is the main function used
+    return types and that evaluation_function() is the main function used
     to output the grading response.
     """
 
     type_dict = {"float": float, "int": int, "str": str, "dict": dict}
-    req_type = body["params"]["type"]
+    req_type = params.get("type", False)
+
+    if not req_type:
+        raise SyntaxError("params.type is a required field")
+
+    cast_type = type_dict.get(req_type, False)
+
+    if not cast_type:
+        raise SyntaxError(f"Supplied type {req_type} not available")
 
     # Try cast each of the inputs to their requested type:
     errors = []
     try:
-        res = type_dict[req_type](body["response"])
+        res = cast_type(response)
     except ValueError as e:
-        errors += [
-            {"description": f"Could not cast `response` parameter to {req_type}"}
-        ]
+        raise ValueError(f"Could not cast `response` parameter to {req_type}")
 
     try:
-        ans = type_dict[req_type](body["answer"])
+        ans = cast_type(answer)
     except ValueError as e:
-        errors += [{"description": f"Could not cast `answer` parameter to {req_type}"}]
+        raise ValueError(f"Could not cast `answer` parameter to {req_type}")
 
-    if errors:
-        return {"error": errors}
-
-    # Are they equaL?
-    is_exact_equal = res == ans
-
-    return {"is_correct": is_exact_equal}
+    # Are they equal?
+    return {"is_correct": res == ans}
