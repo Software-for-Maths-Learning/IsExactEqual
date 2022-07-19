@@ -1,3 +1,6 @@
+from evaluation_function_utils.errors import EvaluationException
+
+
 def evaluation_function(response, answer, params) -> dict:
     """
     Function used to grade a student response.
@@ -23,24 +26,29 @@ def evaluation_function(response, answer, params) -> dict:
     req_type = params.get("type", False)
 
     if not req_type:
-        raise SyntaxError("params.type is a required field")
+        raise EvaluationException(
+            "The evaluation function couldn't process this request: missing parameter",
+            missing="params.type")
 
     cast_type = type_dict.get(req_type, False)
 
     if not cast_type:
-        raise SyntaxError(f"Supplied type {req_type} not available")
+        raise EvaluationException(f"Supplied type {req_type} not available",
+                                  valid_types=list(type_dict.keys()))
 
     # Try cast each of the inputs to their requested type:
     errors = []
     try:
         res = cast_type(response)
     except ValueError as e:
-        raise ValueError(f"Could not cast `response` parameter to {req_type}")
+        raise EvaluationException(
+            f"Could not cast `response` parameter to {req_type}")
 
     try:
         ans = cast_type(answer)
     except ValueError as e:
-        raise ValueError(f"Could not cast `answer` parameter to {req_type}")
+        raise EvaluationException(
+            f"Could not cast `answer` parameter to {req_type}")
 
     # Are they equal?
     return {"is_correct": res == ans}
