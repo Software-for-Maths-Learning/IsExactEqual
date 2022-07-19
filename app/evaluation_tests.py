@@ -1,5 +1,7 @@
 import unittest
 
+from evaluation_function_utils.errors import EvaluationException
+
 from .evaluation import evaluation_function
 
 
@@ -35,7 +37,7 @@ class TestEvaluationFunction(unittest.TestCase):
         body = {"answer": "0", "response": "1.0", "params": {"type": "int"}}
 
         self.assertRaises(
-            ValueError,
+            EvaluationException,
             evaluation_function,
             body['response'],
             body['answer'],
@@ -61,7 +63,7 @@ class TestEvaluationFunction(unittest.TestCase):
         body = {"answer": "abc", "response": "1", "params": {"type": "int"}}
 
         self.assertRaises(
-            ValueError,
+            EvaluationException,
             evaluation_function,
             body['response'],
             body['answer'],
