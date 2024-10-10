@@ -121,5 +121,16 @@ class TestEvaluationFunction(unittest.TestCase):
         self.assertFalse(response.get("error", False))
 
 
+    def test_display_submission_count(self):
+        params = {
+            "type": "int",
+            "submission_context": {"submissions_per_student_per_response_area": 3},
+            "display_submission_count": True
+        }
+        response = 1
+        answer = 1
+        result = evaluation_function(response, answer, params)
+        self.assertTrue("You have submitted 3 responses." in result["feedback"])
+
 if __name__ == "__main__":
     unittest.main()

@@ -50,5 +50,13 @@ def evaluation_function(response, answer, params) -> dict:
         raise EvaluationException(
             f"Could not cast `answer` parameter to {req_type}")
 
+    result = {"is_correct": res == ans}
+
+    if "submission_context" in params.keys():
+        if "submissions_per_student_per_response_area" in params["submission_context"].keys():
+            nbr_of_responses = params["submission_context"]["submissions_per_student_per_response_area"]
+            if params.get("display_submission_count", False):
+                result.update({"feedback": f"You have submitted {nbr_of_responses} responses."})
+
     # Are they equal?
-    return {"is_correct": res == ans}
+    return result
