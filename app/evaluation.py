@@ -54,7 +54,7 @@ def evaluation_function(response, answer, params) -> dict:
 
     if "submission_context" in params.keys():
         if "submissions_per_student_per_response_area" in params["submission_context"].keys():
-            nbr_of_responses = params["submission_context"]["submissions_per_student_per_response_area"]
+            nbr_of_responses = params["submission_context"]["submissions_per_student_per_response_area"]+1
             if params.get("display_submission_count", False):
                 result.update({"feedback": f"You have submitted {nbr_of_responses} responses."})
 
