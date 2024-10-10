@@ -130,7 +130,7 @@ class TestEvaluationFunction(unittest.TestCase):
         response = 1
         answer = 1
         result = evaluation_function(response, answer, params)
-        self.assertTrue("You have submitted 3 responses." in result["feedback"])
+        self.assertTrue("You have submitted 4 responses." in result["feedback"])
 
 if __name__ == "__main__":
     unittest.main()
